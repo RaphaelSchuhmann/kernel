@@ -13,4 +13,6 @@ _start:
     call kmain
 
 .hang:
-    jmp .hang
+  cli
+  hlt
+  jmp .
