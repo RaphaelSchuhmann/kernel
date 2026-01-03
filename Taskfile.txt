@@ -1,0 +1,10 @@
+task compile: null
+  cmake -S . -B build
+  cmake --build build
+
+task build: compile
+  cp build/kernel.elf iso/boot/
+  grub2-mkrescue -o kernel.iso iso/
+
+task run: build
+  qemu-system-i386 -cdrom kernel.iso

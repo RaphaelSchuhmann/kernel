@@ -1,3 +1,5 @@
+// TODO: Implement clear screen function
+// TODO: Implement scan function
 #define VGA_MEMORY ((volatile unsigned short *)0xB8000)
 
 void printMessage(const char *msg) {
