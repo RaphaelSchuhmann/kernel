@@ -1,5 +1,7 @@
 // TODO: Implement clear screen function
 // TODO: Implement scan function
+
+// Size per cell 2 byte, 4KB total (4000 characters)
 #define VGA_MEMORY ((volatile unsigned short *)0xB8000)
 
 void printMessage(const char *msg) {
@@ -14,6 +16,15 @@ void printMessage(const char *msg) {
     }
     VGA_MEMORY[row * 80 + col] = (0x0F << 8) | msg[i];
     col++;
+  }
+}
+
+void clearScreen() {
+  const char *msg = " ";
+  for (int row = 0; row < 25; row++) {
+    for (int col = 0; col < 80; col++) {
+      VGA_MEMORY[row * 80 + col] = (0x0F << 8) | msg[0];
+    }
   }
 }
 
@@ -83,7 +94,6 @@ static const char keymap[128] = {
     0,    // 56 Alt
     ' ',  // 57 Space
     0,    // 58 Caps Lock
-          // etc...
 };
 
 void getch() {
@@ -112,6 +122,7 @@ void getch() {
 }
 
 void kmain() {
+  clearScreen();
   printMessage("Hello World\n");
   getch();
 }
