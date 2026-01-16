@@ -1,4 +1,4 @@
-// TODO: Implement scan function
+// TODO: Implement memory management
 
 // Size per cell 2 byte, 4KB total (4000 characters)
 #define VGA_MEMORY ((volatile unsigned short *)0xB8000)
@@ -176,5 +176,7 @@ void kmain() {
   char buffer[32];
   scan(buffer);
 
+  // TODO: Note that this print is a bit buggy and only sometimes works
+  // Likely when the buffer is not allocated in valid memory
   printMessage(buffer, 2, 0);
 }
