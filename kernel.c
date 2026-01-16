@@ -2,6 +2,8 @@
 
 // Size per cell 2 byte, 4KB total (4000 characters)
 #define VGA_MEMORY ((volatile unsigned short *)0xB8000)
+// a temporary maximum string length for scan
+#define MAX_STR_LEN 64
 
 void printMessage(const char *msg, int row, int col) {
   for (int i = 0; msg[i] != 0; i++) {
@@ -13,6 +15,8 @@ void printMessage(const char *msg, int row, int col) {
     VGA_MEMORY[row * 80 + col] = (0x0F << 8) | msg[i];
     col++;
   }
+
+  return;
 }
 
 void clearScreen() {
@@ -117,24 +121,25 @@ void getch() {
   }
 }
 
-char *scan(char *output) {
-  clearScreen();
-
-  int row = 0;
+void scan(char *output) {
+  int row = 1;
   int col = 0;
+
+  int index = 0;
 
   while (1) {
     while (!(inb(0x64) & 1)) {
+      // Wait for key
     }
 
     unsigned short scancode = inb(0x60);
 
     if (scancode == 0xE0)
-      return output;
+      continue;
 
     // Ignore releases
     if (scancode & 0x80)
-      return output;
+      continue;
 
     unsigned short key = scancode & 0x7F;
 
@@ -142,14 +147,34 @@ char *scan(char *output) {
 
     if (keyChar != 0) {
       if (keyChar == '\n') {
-        return output;
+        printMessage("\n", row, col);
+        output[index] = '\0';
+        break;
       }
+
+      if (index < MAX_STR_LEN - 1) {
+        col++;
+
+        char tempStr[2] = {keyChar, '\0'};
+        printMessage(tempStr, row, col);
+
+        output[index] = keyChar;
+        index++;
+      }
+    } else {
+      break;
     }
   }
+
+  return;
 }
 
 void kmain() {
   clearScreen();
-  printMessage("Hello World\n", 0, 0);
-  getch();
+  printMessage("Enter something:\n", 0, 0);
+
+  char buffer[32];
+  scan(buffer);
+
+  printMessage(buffer, 2, 0);
 }
