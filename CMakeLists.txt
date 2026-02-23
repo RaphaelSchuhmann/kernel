@@ -17,6 +17,7 @@ set(CMAKE_EXE_LINKER_FLAGS
 add_executable(kernel.elf
         boot.s
         kernel.c
+        screen.c
 )
 
 # Make sure the linker script is considered a dependency
