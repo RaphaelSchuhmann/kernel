@@ -3,6 +3,9 @@
 void kmain() {
   init();
 
-  print("Hello World\ntest");
-  print("Second message");
+  print("Enter something\n");
+
+  char buffer[64];
+  scan(buffer);
+  print(buffer);
 }

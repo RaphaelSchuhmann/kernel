@@ -9,11 +9,6 @@ void init() {
 }
 
 void print(const char *message) {
-  if (GlobalScreen.curRow > 0)
-    GlobalScreen.curRow++; // Increment to a new line
-
-  GlobalScreen.curCol = 0; // Reset current column
-
   for (int i = 0; message[i] != 0; i++) {
     if (message[i] == '\n') {
       GlobalScreen.curCol = 0;
@@ -35,4 +30,78 @@ void clear() {
       VGA_MEMORY[row * 80 + col] = (0x0F << 8) | msg[0];
     }
   }
+}
+
+static inline unsigned char inb(unsigned short port) {
+  unsigned char ret;
+  asm volatile("inb %1, %0" : "=a"(ret) : "Nd"(port));
+  return ret;
+}
+
+void getch() {
+  // Wait for key
+  while (!(inb(0x64) & 1)) {
+  }
+
+  unsigned short scancode = inb(0x60);
+
+  // Ignore extended keys for now
+  if (scancode == 0xE0)
+    return;
+
+  // Ignore releases
+  if (scancode & 0x80)
+    return;
+
+  unsigned short key = scancode & 0x7F;
+
+  char keyChar = keymap[key];
+
+  if (keyChar != 0) {
+    char str[2] = {keyChar, '\0'};
+    print(str);
+  }
+}
+
+void scan(char *output) {
+  int index = 0;
+
+  while (1) {
+    // Wait for key
+    while (!(inb(0x64) & 1)) {
+    }
+
+    unsigned short scancode = inb(0x60);
+
+    if (scancode == 0xE0)
+      continue;
+
+    // Ignore releases
+    if (scancode & 0x80)
+      continue;
+
+    unsigned short key = scancode & 0x7F;
+
+    char keyChar = keymap[key];
+
+    if (keyChar != 0) {
+      if (keyChar == '\n') {
+        print("\n");
+        output[index] = '\0';
+        break;
+      }
+
+      if (index < MAX_STR_LEN - 1) {
+        char tempStr[2] = {keyChar, '\0'};
+        print(tempStr);
+
+        output[index] = keyChar;
+        index++;
+      }
+    } else {
+      break;
+    }
+  }
+
+  return;
 }

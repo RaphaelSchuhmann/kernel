@@ -177,8 +177,4 @@ void kmain_basic() {
   char buffer[32];
   // scan(buffer);
   getch();
-
-  // TODO: Note that this print is a bit buggy and only sometimes works
-  // Likely when the buffer is not allocated in valid memory
-  // printMessage(buffer, 2, 0);
 }
