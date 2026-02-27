@@ -21,7 +21,7 @@ void print(const char *message) {
   }
 }
 
-void clearColinCurrentRow(int col) {
+void clearColInCurrentRow(int col) {
   if (col < 0)
     return;
   VGA_MEMORY[GlobalScreen.curRow * 80 + col] = (0x0F << 8) | ' ';

@@ -13,7 +13,7 @@ extern Screen GlobalScreen;
 
 static const char keymap[128] = {
     0,    // 0
-    0,    // 1 (ESC if you want)
+    0,    // 1 (ESC)
     '1',  // 2
     '2',  // 3
     '3',  // 4
@@ -77,7 +77,7 @@ void print(const char *message);
 
 void clear();
 
-void clearColinCurrentRow(int col);
+void clearColInCurrentRow(int col);
 
 void init();
 
