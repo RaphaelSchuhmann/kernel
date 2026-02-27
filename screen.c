@@ -19,15 +19,18 @@ void print(const char *message) {
         (0x0F << 8) | message[i];
     GlobalScreen.curCol++;
   }
+}
 
-  return;
+void clearColinCurrentRow(int col) {
+  if (col < 0)
+    return;
+  VGA_MEMORY[GlobalScreen.curRow * 80 + col] = (0x0F << 8) | ' ';
 }
 
 void clear() {
-  const char *msg = " ";
   for (int row = 0; row < 25; row++) {
     for (int col = 0; col < 80; col++) {
-      VGA_MEMORY[row * 80 + col] = (0x0F << 8) | msg[0];
+      VGA_MEMORY[row * 80 + col] = (0x0F << 8) | ' ';
     }
   }
 }
@@ -85,13 +88,16 @@ void scan(char *output) {
     char keyChar = keymap[key];
 
     if (keyChar != 0) {
-      if (keyChar == '\n') {
+      if (keyChar == '\b' && index >= 0) { // Backspace
+        if (index > 0)
+          index--;
+        clearColinCurrentRow(index);
+        GlobalScreen.curCol = index;
+      } else if (keyChar == '\n') { // Nullterminate string and return
         print("\n");
         output[index] = '\0';
         break;
-      }
-
-      if (index < MAX_STR_LEN - 1) {
+      } else if (index < MAX_STR_LEN - 1 && keyChar != '\b') {
         char tempStr[2] = {keyChar, '\0'};
         print(tempStr);
 

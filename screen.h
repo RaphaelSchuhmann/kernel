@@ -77,6 +77,8 @@ void print(const char *message);
 
 void clear();
 
+void clearColinCurrentRow(int col);
+
 void init();
 
 static inline unsigned char inb(unsigned short port);
