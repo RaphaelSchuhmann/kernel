@@ -91,7 +91,7 @@ void scan(char *output) {
       if (keyChar == '\b' && index >= 0) { // Backspace
         if (index > 0)
           index--;
-        clearColinCurrentRow(index);
+        clearColInCurrentRow(index);
         GlobalScreen.curCol = index;
       } else if (keyChar == '\n') { // Nullterminate string and return
         print("\n");
