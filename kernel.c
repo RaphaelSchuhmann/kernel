@@ -1,11 +1,12 @@
 #include "screen.h"
+#include "utils.h"
 
 void kmain() {
   init();
 
   print("Enter something\n");
 
-  char buffer[64];
-  scan(buffer);
-  print(buffer);
+  char itoaResult[32];
+  itoa(255, itoaResult, 2);
+  print(itoaResult);
 }

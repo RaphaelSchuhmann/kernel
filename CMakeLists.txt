@@ -18,6 +18,7 @@ add_executable(kernel.elf
         boot.s
         kernel.c
         screen.c
+        utils.c
 )
 
 # Make sure the linker script is considered a dependency

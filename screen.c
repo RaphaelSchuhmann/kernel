@@ -104,8 +104,6 @@ void scan(char *output) {
         output[index] = keyChar;
         index++;
       }
-    } else {
-      break;
     }
   }
 
