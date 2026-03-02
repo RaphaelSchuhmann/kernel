@@ -12,6 +12,9 @@ _start:
     mov $0x900000, %esp
     call kmain
 
+    mov $0x00, %al
+    outb %al, $0xf4
+
 .hang:
   cli
   hlt

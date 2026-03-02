@@ -40,3 +40,26 @@ char *itoa(int num, char *buffer, int base) {
 
   return buffer;
 }
+
+int atoi(char *buffer) {
+  int result = 0;
+  int sign = 0;
+  int i = 0;
+
+  if (buffer[0] == '-') {
+    sign = -1;
+    i++;
+  } else if (buffer[0] == '+') {
+    i++;
+  }
+
+  while (buffer[i] != '\0') {
+    if (buffer[i] < '0' || buffer[i] > '9') {
+      break;
+    }
+    result = result * 10 + (buffer[i] - '0');
+    i++;
+  }
+
+  return sign * result;
+}

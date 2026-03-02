@@ -7,4 +7,4 @@ task build: compile
   grub2-mkrescue -o kernel.iso iso/
 
 task run: build
-  qemu-system-i386 -cdrom kernel.iso
+  qemu-system-i386 -device isa-debug-exit,iobase=0xf4,iosize=0x04 -cdrom kernel.iso
