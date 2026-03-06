@@ -89,10 +89,12 @@ void scan(char *output) {
 
     if (keyChar != 0) {
       if (keyChar == '\b' && index >= 0) { // Backspace
-        if (index > 0)
+        if (index > 0 && GlobalScreen.curCol > 0) {
           index--;
-        clearColInCurrentRow(index);
-        GlobalScreen.curCol = index;
+          GlobalScreen.curCol--;
+        }
+
+        clearColInCurrentRow(GlobalScreen.curCol);
       } else if (keyChar == '\n') { // Nullterminate string and return
         print("\n");
         output[index] = '\0';
