@@ -3,14 +3,15 @@
 
 void exitOS(int status) {
   // Port: 0xf4 (iobase)
-  // Value: status (This becomes (status << 1) | 1 in the shell)
+  // Value: status (This becomes (status << 1) | 1 in the shell and can be
+  // ignored)
   asm volatile("outb %b0, %w1" : : "a"(status), "d"(0xf4));
 }
 
 void kmain() {
   init();
 
-  print("Hello World: ");
+  print("Hello World: \n");
   char buf[64];
   scan(buf);
 
