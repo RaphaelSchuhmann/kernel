@@ -15,7 +15,7 @@ void print(const char *message) {
       GlobalScreen.curRow++;
       continue;
     }
-    VGA_MEMORY[GlobalScreen.curRow * 80 + GlobalScreen.curCol] =
+    VGA_MEMORY[GlobalScreen.curRow * VGA_WIDTH + GlobalScreen.curCol] =
         (0x0F << 8) | message[i];
     GlobalScreen.curCol++;
   }
@@ -28,9 +28,9 @@ void clearColInCurrentRow(int col) {
 }
 
 void clear() {
-  for (int row = 0; row < 25; row++) {
-    for (int col = 0; col < 80; col++) {
-      VGA_MEMORY[row * 80 + col] = (0x0F << 8) | ' ';
+  for (int row = 0; row < VGA_HEIGHT; row++) {
+    for (int col = 0; col < VGA_WIDTH; col++) {
+      VGA_MEMORY[row * VGA_WIDTH + col] = (0x0F << 8) | ' ';
     }
   }
 }

@@ -4,6 +4,9 @@
 #define VGA_MEMORY ((volatile unsigned short *)0xB8000)
 #define MAX_STR_LEN 64
 
+#define VGA_WIDTH 80
+#define VGA_HEIGHT 25
+
 typedef struct {
   int curCol;
   int curRow;
