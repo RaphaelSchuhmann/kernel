@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "utils.h"
 
 Screen GlobalScreen;
 
@@ -68,6 +69,7 @@ void getch() {
 
 void scan(char *output) {
   int index = 0;
+  int rowsWrapped = 0;
 
   while (1) {
     // Wait for key
@@ -92,6 +94,10 @@ void scan(char *output) {
         if (index > 0 && GlobalScreen.curCol > 0) {
           index--;
           GlobalScreen.curCol--;
+        } else if (rowsWrapped > 0) {
+          GlobalScreen.curRow--;
+          int strLen = getStrLen(output);
+          GlobalScreen.curCol = strLen % 80;
         }
 
         clearColInCurrentRow(GlobalScreen.curCol);
@@ -100,6 +106,11 @@ void scan(char *output) {
         output[index] = '\0';
         break;
       } else if (index < MAX_STR_LEN - 1 && keyChar != '\b') {
+        if (GlobalScreen.curCol == VGA_WIDTH - 1) {
+          print("\n");
+          rowsWrapped++;
+        }
+
         char tempStr[2] = {keyChar, '\0'};
         print(tempStr);
 

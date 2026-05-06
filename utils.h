@@ -7,4 +7,6 @@ char *itoa(int num, char *buffer, int base);
 
 int atoi(char *buffer);
 
+int getStrLen(char *str);
+
 #endif

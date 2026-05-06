@@ -2,7 +2,7 @@
 #define SCREEN_H
 
 #define VGA_MEMORY ((volatile unsigned short *)0xB8000)
-#define MAX_STR_LEN 64
+#define MAX_STR_LEN 128
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
