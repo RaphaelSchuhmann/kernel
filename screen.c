@@ -95,12 +95,16 @@ void scan(char *output) {
           index--;
           GlobalScreen.curCol--;
         } else if (rowsWrapped > 0) {
+          // Count down curRow (curCol should already be 0)
           GlobalScreen.curRow--;
-          int strLen = getStrLen(output);
-          GlobalScreen.curCol = strLen % 80;
+
+          GlobalScreen.curCol = VGA_WIDTH - 2;
+          rowsWrapped--;
+          index--;
         }
 
         clearColInCurrentRow(GlobalScreen.curCol);
+        output[getStrLen(output)] = '\0';
       } else if (keyChar == '\n') { // Nullterminate string and return
         print("\n");
         output[index] = '\0';
@@ -121,4 +125,12 @@ void scan(char *output) {
   }
 
   return;
+}
+
+int getPrevRowUsedColumns(char *str) {
+  if (GlobalScreen.curCol <= VGA_WIDTH)
+    return GlobalScreen.curCol;
+
+  int strLen = getStrLen(str);
+  return strLen % 80;
 }

@@ -90,4 +90,6 @@ void getch();
 
 void scan(char *output);
 
+int getPrevRowUsedColumns(char *str);
+
 #endif
