@@ -15,11 +15,7 @@ void kmain() {
   char buf[64];
   scan(buf);
 
-  print("\n");
-  print(buf);
-
-  getch();
-  getch();
+  char ch = getch();
 
   exitOS(0);
 }

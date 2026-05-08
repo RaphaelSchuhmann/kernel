@@ -86,10 +86,12 @@ void init();
 
 static inline unsigned char inb(unsigned short port);
 
-void getch();
+char getch();
 
 void scan(char *output);
 
 int getPrevRowUsedColumns(char *str);
+
+void flushKeyboard();
 
 #endif

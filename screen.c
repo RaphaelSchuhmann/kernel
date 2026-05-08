@@ -42,7 +42,7 @@ static inline unsigned char inb(unsigned short port) {
   return ret;
 }
 
-void getch() {
+char getch() {
   // Wait for key
   while (!(inb(0x64) & 1)) {
   }
@@ -50,12 +50,16 @@ void getch() {
   unsigned short scancode = inb(0x60);
 
   // Ignore extended keys for now
-  if (scancode == 0xE0)
-    return;
+  if (scancode == 0xE0) {
+    flushKeyboard();
+    return '\0';
+  }
 
   // Ignore releases
-  if (scancode & 0x80)
-    return;
+  if (scancode & 0x80) {
+    flushKeyboard();
+    return '\0';
+  }
 
   unsigned short key = scancode & 0x7F;
 
@@ -64,7 +68,13 @@ void getch() {
   if (keyChar != 0) {
     char str[2] = {keyChar, '\0'};
     print(str);
+
+    flushKeyboard();
+    return keyChar;
   }
+
+  flushKeyboard();
+  return '\0';
 }
 
 void scan(char *output) {
@@ -78,12 +88,14 @@ void scan(char *output) {
 
     unsigned short scancode = inb(0x60);
 
-    if (scancode == 0xE0)
+    if (scancode == 0xE0) {
       continue;
+    }
 
     // Ignore releases
-    if (scancode & 0x80)
+    if (scancode & 0x80) {
       continue;
+    }
 
     unsigned short key = scancode & 0x7F;
 
@@ -124,6 +136,7 @@ void scan(char *output) {
     }
   }
 
+  flushKeyboard();
   return;
 }
 
@@ -133,4 +146,10 @@ int getPrevRowUsedColumns(char *str) {
 
   int strLen = getStrLen(str);
   return strLen % 80;
+}
+
+void flushKeyboard() {
+  while (!(inb(0x64) & 1)) {
+    inb(0x60);
+  }
 }
