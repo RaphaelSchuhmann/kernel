@@ -15,7 +15,5 @@ void kmain() {
   char buf[64];
   scan(buf);
 
-  char ch = getch();
-
   exitOS(0);
 }

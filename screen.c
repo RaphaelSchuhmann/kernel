@@ -43,38 +43,57 @@ static inline unsigned char inb(unsigned short port) {
 }
 
 char getch() {
-  // Wait for key
-  while (!(inb(0x64) & 1)) {
-  }
+  while (1) {
 
-  unsigned short scancode = inb(0x60);
+    // Wait for key
+    while (!(inb(0x64) & 1)) {
+    }
 
-  // Ignore extended keys for now
-  if (scancode == 0xE0) {
+    unsigned short scancode = inb(0x60);
+
+    // Ignore extended keys for now
+    if (scancode == 0xE0) {
+      flushKeyboard();
+      return '\0';
+    }
+
+    if (scancode == LEFT_SHIFT_MAKE || scancode == RIGHT_SHIFT_BREAK) {
+      shiftPressed = 1;
+      continue;
+    }
+
+    if (scancode == LEFT_SHIFT_BREAK || scancode == RIGHT_SHIFT_BREAK) {
+      shiftPressed = 0;
+      continue;
+    }
+
+    // Ignore releases
+    if (scancode & 0x80) {
+      flushKeyboard();
+      return '\0';
+    }
+
+    unsigned short key = scancode & 0x7F;
+
+    char keyChar;
+
+    if (shiftPressed) {
+      keyChar = KeymapUppercase[key];
+    } else {
+      keyChar = KeymapLowercase[key];
+    }
+
+    if (keyChar != 0) {
+      char str[2] = {keyChar, '\0'};
+      print(str);
+
+      flushKeyboard();
+      return keyChar;
+    }
+
     flushKeyboard();
     return '\0';
   }
-
-  // Ignore releases
-  if (scancode & 0x80) {
-    flushKeyboard();
-    return '\0';
-  }
-
-  unsigned short key = scancode & 0x7F;
-
-  char keyChar = keymap[key];
-
-  if (keyChar != 0) {
-    char str[2] = {keyChar, '\0'};
-    print(str);
-
-    flushKeyboard();
-    return keyChar;
-  }
-
-  flushKeyboard();
-  return '\0';
 }
 
 void scan(char *output) {
@@ -92,6 +111,16 @@ void scan(char *output) {
       continue;
     }
 
+    if (scancode == LEFT_SHIFT_MAKE || scancode == RIGHT_SHIFT_BREAK) {
+      shiftPressed = 1;
+      continue;
+    }
+
+    if (scancode == LEFT_SHIFT_BREAK || scancode == RIGHT_SHIFT_BREAK) {
+      shiftPressed = 0;
+      continue;
+    }
+
     // Ignore releases
     if (scancode & 0x80) {
       continue;
@@ -99,7 +128,13 @@ void scan(char *output) {
 
     unsigned short key = scancode & 0x7F;
 
-    char keyChar = keymap[key];
+    char keyChar;
+
+    if (shiftPressed) {
+      keyChar = KeymapUppercase[key];
+    } else {
+      keyChar = KeymapLowercase[key];
+    }
 
     if (keyChar != 0) {
       if (keyChar == '\b' && index >= 0) { // Backspace
