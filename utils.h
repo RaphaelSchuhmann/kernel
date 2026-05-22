@@ -3,7 +3,7 @@
 
 void reverseStr(char str[], int length);
 
-char *itoa(int num, char *buffer, int base);
+void itoa(int num, char *buffer, int base);
 
 int atoi(char *buffer);
 

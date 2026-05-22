@@ -12,14 +12,13 @@ void reverseStr(char str[], int length) {
   }
 }
 
-char *itoa(int num, char *buffer, int base) {
+void itoa(int num, char *buffer, int base) {
   int i = 0;
   int isNegative = 0;
 
   if (num == 0) {
     buffer[i++] = '0';
     buffer[i] = '\0';
-    return buffer;
   }
 
   if (num < 0 && base == 10) {
@@ -37,8 +36,6 @@ char *itoa(int num, char *buffer, int base) {
     buffer[i++] = '-';
 
   reverseStr(buffer, i);
-
-  return buffer;
 }
 
 int atoi(char *buffer) {
